@@ -11,13 +11,14 @@ block content
           small &nbsp;#{pageHeader.strapline}
   .row
     .col-xs-12.col-sm-8
+      .error= message
       //List
       .row.list-group
       each location in locations
         .col-xs-12.list-group-item
           h4 
             //Hardcoded data for now
-            a(href='/location')= location.name
+            a(href="/location/#{location._id}")= location.name
             small &nbsp;
               +outputRating(location.rating)  
               
