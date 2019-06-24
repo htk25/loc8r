@@ -32,6 +32,70 @@ function renderHomepage(req,res,responseBody){
   );
 }
 
+function renderDetailpage(req,res,responseBody){
+  res.render('location-info', { 
+    title: responseBody.name,
+    pageHeader:{title: responseBody.name},
+    sidebar:{
+      context: 'is on Loc8r because it has accessible wifi and space to sit down with your laptop and get some work done.',
+      callToAction: 'If you\'ve been and you like it - or if you don\'t  please leave a review to help other people just like you.'
+    },
+    location: responseBody
+  });
+}
+
+function renderReviewForm(req,res,location){
+  res.render('location-review-form', { 
+    title: 'Review '+ location.name +' on Loc8r',
+    pageHeader:{
+      title: 'Review '+ location.name
+    }, 
+    error: req.query.err
+  });
+}
+
+function _showError (req, res, status) {
+  var title, content;
+  if (status === 404) {
+    title = "404, page not found";
+    content = "Oh dear. Looks like we can't find this page. Sorry.";
+  } else {
+    title = status + ", something's gone wrong";
+    content = "Something, somewhere, has gone just a little bit wrong.";
+  }
+  res.status(status);
+  res.render('generic-text', {
+    title : title,
+    content : content
+  });
+};
+
+function getLocationInfo(req,res,callback){
+  var requestOptions = {
+    url: apiOptions.server+"/api/locations/"+req.params.locationid,
+    method:"GET",
+    json:{}
+  };
+
+  request(requestOptions, 
+    function(err, response, body){
+      if(err)
+        console.log(err);
+      else{
+        var data = body;
+        //console.log(req);
+        if(response.statusCode == 200){
+          callback(req,res,data);
+        }
+        else{
+          _showError(req,res,response.statusCode);
+        }
+      }
+      
+    }
+  )
+}
+
 /* GET home page */
 module.exports.homelist = function(req, res){
   var requestOptions = {
@@ -66,52 +130,42 @@ module.exports.homelist = function(req, res){
 
 /* GET 'Location info'/the detail page */
 module.exports.locationInfo = function(req, res){
-  res.render('location-info', { 
-    title: 'Starcups',
-    pageHeader:{title: 'Starcups'},
-    sidebar:{
-      context: 'is on Loc8r because it has accessible wifi and space to sit down with your laptop and get some work done.',
-      callToAction: 'If you\'ve been and you like it - or if you don\'t  please leave a review to help other people just like you.'
-    },
-    location:{
-      name: 'Starcups',
-      address: '125 High Street, Reading, RG6 1PS',
-      rating: 3,
-      facilities: ['Hot drinks', 'Food', 'Premium wifi'],
-      coords:{lat:51.455041, lng: -0.9690884},
-      openingTimes: [
-      { 
-        days: 'Monday - Friday',
-        opening: '7:00am',
-        closing: '7:00pm',
-        closed: false,
-      },
-      {
-        days: 'Saturday',
-        opening: '8:00am',
-        closing: '5:00pm',
-        closed: false,
-      },
-      {
-        days: 'Sunday',
-        closed: true,
-      }],
-      reviews: [{
-        author: 'Simon Holmes',
-        rating: 5,
-        timestamp: '16 July 2013',
-        reviewText: 'What a great place. I can\'t say enough good things about it.'  
-      }]
-    }
-  });
+  getLocationInfo(req,res,renderDetailpage);
 };
 
 /* GET 'Add review' page */
 module.exports.addReview = function(req, res){
-  res.render('location-review-form', { 
-    title: 'Review Starcups on Loc8r',
-    pageHeader:{
-      title: 'Review Starcups'
-    } 
-  });
+  getLocationInfo(req,res,renderReviewForm);
+};
+
+/* POST 'Add review' page */
+module.exports.doAddReview = function(req, res){
+  
+  var requestOptions, locationid = req.params.locationid;
+  requestOptions = {
+    url: apiOptions.server+"/api/locations/"+locationid+"/reviews",
+    method: "POST",
+    json: {
+      author: req.body.name,
+      rating: parseInt(req.body.rating, 10),
+      reviewText: req.body.review
+    }
+  };
+  //Inputs validations, make sure not empty
+  if (!requestOptions.json.author || (!requestOptions.json.rating && requestOptions.json.rating != 0 )|| !requestOptions.json.reviewText) {
+    res.redirect('/location/' + locationid + '/reviews/new?err=val');
+    return;
+  }
+
+  request(requestOptions, 
+    function(err, response, body){
+      console.log(response);
+      if(response.statusCode === 201)
+        res.redirect('/location/'+locationid);
+      else if(response.statusCode===400 && body.name && body.name === "ValidationError")
+        res.redirect("/location/"+locationid+"/reviews/new?err=val");
+      else
+        _showError(req,res,response.statusCode);
+    }
+  )
 };
