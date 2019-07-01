@@ -11,6 +11,17 @@
   <link rel="stylesheet" href="assets/stylesheets/all.min.css">
   <link rel="stylesheet" href="assets/stylesheets/style.css">
 
+  <!-- added Google Login -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <style>
+    body{
+      margin-left: 20px;
+    }
+  </style>
+  <meta name="google-signin-client_id" content="978852050321-gd96p3fd3j080566mt0l10u9l9nd0oj0.apps.googleusercontent.com">
+  <!-- End -->
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="stylesheet" href="styles.3ff695c00d717f2d2a11.css"></head>
@@ -24,5 +35,42 @@ integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm
 crossorigin="anonymous">
 </script>
 <script src="assets/javascripts/bootstrap.min.js"></script>
-<script type="text/javascript" src="runtime.26209474bfa8dc87a77c.js"></script><script type="text/javascript" src="es2015-polyfills.8324bb31dd8aa5f2460c.js" nomodule></script><script type="text/javascript" src="polyfills.8bbb231b43165d65d357.js"></script><script type="text/javascript" src="main.664f53cc658fa8626c1b.js"></script></body>
+
+<!-- Added google login -->
+<div class="g-signin2" data-onsuccess="onSignIn"></div>
+  <div id="profileData"></div>
+  
+  <button id="signOutBtn" onclick="signOut();" class="btn btn-danger" style="display: none">Sign Out</button>
+  <!-- <a href="#" onclick="signOut();" class="button">Sign out</a> -->
+  
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script>
+    function onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      
+      $('#profileData').empty();
+      $("#profileData").append("<p>Name: "+ profile.getName() +"</p>");
+      $("#profileData").append("<img width = '100' height = '100' src= '" + profile.getImageUrl() + "'/>");
+      $("#profileData").append("<p>Email address: "+ profile.getEmail() +"</p>");
+      // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      // console.log('Name: ' + profile.getName());
+      // console.log('Image URL: ' + profile.getImageUrl());
+      // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+      $(".g-signin2").hide();
+      $("#signOutBtn").show();
+    }
+
+    function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        $('#profileData').empty();
+        console.log('User signed out.');
+        alert("User signed out.");
+      });
+      $("#signOutBtn").hide();
+      $(".g-signin2").show();
+    }
+  </script>
+<!-- End -->
+<script type="text/javascript" src="runtime.26209474bfa8dc87a77c.js"></script><script type="text/javascript" src="es2015-polyfills.8324bb31dd8aa5f2460c.js" nomodule></script><script type="text/javascript" src="polyfills.8bbb231b43165d65d357.js"></script><script type="text/javascript" src="main.a4ae29d0242cbaf0ae2c.js"></script></body>
 </html>
