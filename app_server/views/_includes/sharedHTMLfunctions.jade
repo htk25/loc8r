@@ -1,8 +1,8 @@
 mixin outputRating(rating)
   - for(let i = 1; i <= rating;i++)
-    span.glyphicon.glyphicon-star
+    span.fas.fa-star
   - for(let i = rating; i < 5 ;i++)
-    span.glyphicon.glyphicon-star-empty
+    span.far.fa-star
 
 mixin formatDate(dateString)
   -var date = new Date(dateString);

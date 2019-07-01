@@ -3,7 +3,8 @@ html
   head
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     title= title
-    link(rel='stylesheet', href='/bootstrap/css/amelia.bootstrap.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/all.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     .navbar.navbar-default.navbar-fixed-top
@@ -26,6 +27,7 @@ html
             small &copy; Simon Holmes 2014
     script(src='/javascripts/jquery-3.4.1.min.js')
    
-    script(src='/bootstrap/js/bootstrap.min.js')
+    script(src='/javascripts/bootstrap.min.js')
     script(src='/javascripts/validation.js')
+    block scripts
   
