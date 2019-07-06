@@ -27,6 +27,10 @@ app.use(express.static(path.join(__dirname, 'loc8r-public')));
 
 app.use('/api', (req,res,next) =>{
   res.header('Access-Control-Allow-Origin','http://localhost:4200');
+  if(process.env.NODE_ENV === 'production'){
+    res.header('Access-Control-Allow-Origin','https://loc8r4.herokuapp.com');
+  }
+
   res.header('Access-Control-Allow-Headers', 'Origin, XRequested-With, Content-Type, Accept');
   next();
 });

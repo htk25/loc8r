@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Location } from './home-list/home-list.component';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,9 @@ export class Loc8rDataService {
   private apiBaseUrl = 'http://localhost:3000/api';
 
   public getLocations(): Promise<Location[]> {
-    
+    if(environment.production)
+      this.apiBaseUrl = 'https://loc8r4.herokuapp.com/api';
+
     const lng: number = -0.7992599;
     const lat: number = 51.378091;
 
