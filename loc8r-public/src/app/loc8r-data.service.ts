@@ -12,14 +12,13 @@ export class Loc8rDataService {
 
   private apiBaseUrl = 'http://localhost:3000/api';
 
-  public getLocations(): Promise<Location[]> {
+  public getLocations(lat: number, lng: number): Promise<Location[]> {
     if(environment.production)
       this.apiBaseUrl = 'https://loc8r4.herokuapp.com/api';
 
-    const lng: number = -0.7992599;
-    const lat: number = 51.378091;
+    
 
-    const maxDistance: number = 20;
+    const maxDistance: number = 10000;
     const url: string = `${this.apiBaseUrl}/locations?lng=${lng}&lat=${lat}&maxDistance=${maxDistance}`;
 
     return this.http
@@ -27,9 +26,22 @@ export class Loc8rDataService {
       .toPromise()
       .then(response => response as Location[])
       .catch(this.handleError);
-
-
   }
+
+  public getLocationsById(locationId: string): Promise<Location> {
+    if(environment.production)
+      this.apiBaseUrl = 'https://loc8r4.herokuapp.com/api';
+
+    
+
+    const url: string = `${this.apiBaseUrl}/locations/${locationId}`;
+
+    return this.http
+      .get(url)
+      .toPromise()
+      .then(response => response as Location)
+      .catch(this.handleError);
+  }  
 
   private handleError(error:any): Promise<any>{
     console.error('Something has gone wrong', error);
