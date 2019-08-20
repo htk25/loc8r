@@ -14,6 +14,7 @@ export class DetailsPageComponent implements OnInit {
   constructor(private loc8rDataService: Loc8rDataService,
     private route: ActivatedRoute) { }
 
+
   ngOnInit():void {
     this.route.paramMap
       .pipe(
@@ -24,12 +25,16 @@ export class DetailsPageComponent implements OnInit {
         })
       )
       .subscribe( (newLocation: Location) =>{
+        this.newLocation = newLocation;
         this.pageContent.header.title = newLocation.name;
         this.pageContent.sidebar= newLocation.name+' is on Loc8r because it has accessible wifi and space to sit down with your laptop and get some work done.\n\nI fyou\'ve been and you like it - or if you don\'t - please leave a review to help other people just like you.';
+        //console.log(newLocation);
+        //console.log(this.newLocation);
       });
     
   }
 
+  public newLocation : Location;
   public pageContent = {
     header:{
       title: '',

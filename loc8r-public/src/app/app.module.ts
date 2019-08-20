@@ -17,6 +17,7 @@ import { HtmlLineBreaksPipe } from './html-line-breaks.pipe';
 import { RatingStarsComponent } from './rating-stars/rating-stars.component';
 import { LocationDetailsComponent } from './location-details/location-details.component';
 import { DetailsPageComponent } from './details-page/details-page.component';
+import { ChronSortPipe } from './chron-sort.pipe';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { DetailsPageComponent } from './details-page/details-page.component';
     HtmlLineBreaksPipe,
     RatingStarsComponent,
     LocationDetailsComponent,
-    DetailsPageComponent
+    DetailsPageComponent,
+    ChronSortPipe
   ],
   imports: [
     RouterModule.forRoot([

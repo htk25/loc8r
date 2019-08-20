@@ -48,10 +48,12 @@ border-color: white;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   margin-bottom: 0.5em;
+  margin-left: -10px;
+  margin-right: -10px;
 }
 .review {
-  margin-right: -16px;
-  margin-left: -16px;
+  margin-right: 0px;
+  margin-left: 0px;
   margin-bottom: 0.5em;
 }
 .badge-default, .btn-primary {
